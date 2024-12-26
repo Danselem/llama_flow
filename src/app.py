@@ -1,8 +1,5 @@
 import os
 from typing import List, Optional
-from pydantic import BaseModel, Field
-from decimal import Decimal
-from datetime import date
 from pathlib import Path
 import pandas as pd
 import asyncio
@@ -21,6 +18,7 @@ from llama_index.core.retrievers import BaseRetriever
 from llama_index.core.prompts import ChatPromptTemplate
 from llama_parse import LlamaParse
 from llama_index.llms.groq import Groq
+from llama_index.embeddings.gemini import GeminiEmbedding
 # from llama_index.utils.workflow import draw_all_possible_flows
 
 from utils import set_env
@@ -30,6 +28,12 @@ from utils import EnrichedLineItem, ProductCatalog
 # Setting Env Variables
 set_env("LLAMA_CLOUD_API_KEY")
 set_env("GROQ_API_KEY")
+set_env("GOOGLE_API_KEY")
+
+model_name = "models/embedding-001"
+embed_model = GeminiEmbedding(
+    model_name=model_name, title="this is a document"
+)
 
 
 # Extract Prompt Template
@@ -72,7 +76,8 @@ def create_product_catalog_index(
     
     # Create and return the index
     index = VectorStoreIndex.from_documents(
-        documents
+        documents,
+        embed_model=embed_model
     )
     
     return index.as_retriever(similarity_top_k=1)
@@ -216,7 +221,6 @@ class SKUMatchingWorkflow(Workflow):
 
 
 parser = LlamaParse(result_type="markdown")
-# llm = OpenAI(model="gpt-4o")
 llm = Groq(model="llama3-70b-8192",)
 
 # Create product catalog index
@@ -237,14 +241,7 @@ workflow = SKUMatchingWorkflow(
 
 # draw_all_possible_flows(SKUMatchingWorkflow, filename="sku_matching_workflow.html")
 
-# Run the workdflow
-# Run workflow
-# handler = workflow.run(invoice_path="invoice.pdf")
-# async for event in handler.stream_events():
-#     if isinstance(event, LogEvent):
-#         print(event.msg)
-        
-# result = await handler
+# Run the workflow
 
 async def main():
     handler = workflow.run(invoice_path="invoice.pdf")

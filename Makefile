@@ -9,9 +9,9 @@ init:
 install:
 	uv venv
 	. .venv/bin/activate
-	# uv pip install --all-extras --requirement pyproject.toml
+	uv pip install --all-extras --requirement pyproject.toml
 	# uv pip sync requirements.txt
-	uv add -r requirements.txt
+	# uv add -r requirements.txt
 
 runapp:
-	uv run src/ingest.py
+	uv run src/app.py

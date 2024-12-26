@@ -1,4 +1,5 @@
 llama-parse
 llama-index
 llama-index-llms-groq
+llama-index-embeddings-gemini
 python-dotenv

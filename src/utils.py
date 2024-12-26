@@ -8,15 +8,8 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 from llama_index.core.workflow import Event
-from llama_index.llms.groq import Groq
 
 
-
-# def set_env(var: str):
-#     # if not os.environ.get(var):
-#     dotenv_path = Path('../.env')
-#     load_dotenv(dotenv_path=dotenv_path)
-#     os.environ[var] = os.getenv(var)
 
 def set_env(var: str):
     # Load environment variables from the .env file
